@@ -17,7 +17,7 @@ const Controller = ({
 }) => (
   <div>
     <SearchPanel term={term} searchHandler={searchHandler} toggleForm={toggleForm} />
-    <Row>
+    <Row className='mt-2 mb-3'>
       <Col md={{ size: 4 }}>
         <FilterController filterHandler={filterHandler} />
       </Col>

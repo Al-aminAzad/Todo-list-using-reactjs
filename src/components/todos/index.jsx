@@ -5,6 +5,7 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import CreateTodoForm from './create-form';
 import Controller from './controllers';
 import shortid from 'shortid';
+import { FaMastodon  } from "react-icons/fa";
 
 class Todos extends Component {
   state = {
@@ -29,6 +30,7 @@ class Todos extends Component {
     isOpenTodoForm: false,
     searchTerm: '',
     view: 'list',
+    filter: 'all',
   };
 
   toggleSelect = (todoId) => {
@@ -43,7 +45,12 @@ class Todos extends Component {
     todo.isComplete = !todo.isComplete;
     this.setState({ todos });
   };
-  searchHandler = () => {};
+  searchHandler = (value) => {
+    this.setState({ searchTerm: value });
+  };
+  performSearch = () => {
+    return this.state.todos.filter((todo) => todo.text.toLowerCase().includes(this.state.searchTerm.toLowerCase()));
+  };
   toogleForm = () => {
     this.setState({
       isOpenTodoForm: !this.state.isOpenTodoForm,
@@ -60,24 +67,51 @@ class Todos extends Component {
     this.toogleForm();
   };
 
-  filterHandler = () => {};
+  filterHandler = (filter) => {
+    this.setState({ filter });
+  };
+  performFilter = (todos) => {
+    const { filter } = this.state;
+    if (filter === 'completed') {
+      return todos.filter((todo) => todo.isComplete);
+    } else if (filter === 'running') {
+      return todos.filter((todo) => !todo.isComplete);
+    } else {
+      return todos;
+    }
+  };
   changeView = (event) => {
     this.setState({ view: event.target.value });
   };
-  clearSlected = () => {};
-  clearCompleted = () => {};
-  reset = () => {};
+  clearSlected = () => {
+    const todos = this.state.todos.filter((todo) => !todo.isSelect);
+    this.setState({ todos });
+  };
+  clearCompleted = () => {
+    const todos = this.state.todos.filter((todo) => !todo.isComplete);
+    this.setState({ todos });
+  };
+  reset = () => {
+    this.setState({
+      isOpenTodoForm: false,
+      searchTerm: '',
+      view: 'list',
+      filter: 'all',
+    });
+  };
   getView = () => {
+    let todos = this.performSearch();
+    todos = this.performFilter(todos);
     return this.state.view === 'list' ? (
-      <ListView todos={this.state.todos} toggleSelect={this.toggleSelect} toggleComplete={this.toggleComplete} />
+      <ListView todos={todos} toggleSelect={this.toggleSelect} toggleComplete={this.toggleComplete} />
     ) : (
-      <TableView todos={this.state.todos} toggleSelect={this.toggleSelect} toggleComplete={this.toggleComplete} />
+      <TableView todos={todos} toggleSelect={this.toggleSelect} toggleComplete={this.toggleComplete} />
     );
   };
   render() {
     return (
       <div>
-        <h1 className="display-4 text-center mb-5">Stack Todo</h1>
+        <h1 className="display-4 text-center mb-5">Stack Todo <FaMastodon /> </h1>
         <Controller
           term={this.state.searchTerm}
           searchHandler={this.searchHandler}

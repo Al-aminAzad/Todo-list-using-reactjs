@@ -2,20 +2,26 @@ import React from 'react';
 import { CustomInput, Button, Table } from 'reactstrap';
 
 const RowItem = ({ todo, toggleSelect, toggleComplete }) => (
-  <tr>
-    <th scope="row">
+  <tr className="">
+    <td>
       <CustomInput type="checkbox" id={todo.id} checked={todo.isSelect} onChange={() => toggleSelect(todo.id)} />
-    </th>
-    <th> {todo.time.toDateString()}</th>
-    <th>{todo.text}</th>
-    <Button className="ml-auto" color={todo.isComplete ? 'danger' : 'success'} onClick={() => toggleComplete(todo.id)}>
-      {todo.isComplete ? 'Complete' : 'Running'}
-    </Button>
+    </td>
+    <td> {todo.time.toDateString()}</td>
+    <td>{todo.text}</td>
+    <td>
+      <Button
+        className="ml-auto mt-2"
+        color={todo.isComplete ? 'danger' : 'success'}
+        onClick={() => toggleComplete(todo.id)}
+      >
+        {todo.isComplete ? 'Complete' : 'Running'}
+      </Button>
+    </td>
   </tr>
 );
 
 const TableView = ({ todos, toggleSelect, toggleComplete }) => (
-  <Table>
+  <Table className="table table-bordered">
     <thead>
       <tr>
         <th>#</th>
